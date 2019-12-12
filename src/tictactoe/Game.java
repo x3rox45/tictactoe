@@ -1,5 +1,6 @@
 package tictactoe;
 
+import java.io.PrintStream;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -14,19 +15,38 @@ public class Game {
 	private Board board;
 	private int startingPlayer;
 	private int currentPlayer;
+	private PrintStream out;
 	
 	Game() {
 		this.players = new Player[NUMBER_OF_PLAYERS];
 		this.players[0] = new Player(SIGN_1);
 		this.players[1] = new Player(SIGN_2);
-		this.startingPlayer = new Random().nextInt(players.length);
 		this.board = new Board();
+		this.startingPlayer = new Random().nextInt(players.length);
+		out = new PrintStream(System.out);
 	}
 	
-	int readInput(Scanner scanner) {
+	void printBoard(Board board, PrintStream out) {
+		String boardString = "";
+		for (int row = 0; row < board.getHeight(); row++) {
+			for (int col = 0; col < board.getWidth(); col++) {
+				boardString += " " + board.getSquare(row, col) + " ";
+				if (col != board.getWidth() - 1) {
+					boardString += "|";
+				}
+			}
+			boardString += "\n";
+			if (row != board.getHeight() - 1) {
+				boardString += "-----------\n";
+			}
+		}
+		out.printf(boardString);
+	}
+	
+	int readInput(Scanner scanner, PrintStream out) {
 		int input = 0;
 		do {
-			System.out.printf("Where do you want to place your sign, player %d(%s)? ", currentPlayer + 1, players[currentPlayer].getSign());
+			out.printf("Where do you want to place your sign, player %d(%s)? ", currentPlayer + 1, players[currentPlayer].getSign());
 			if (scanner.hasNextInt()) {
 				input = scanner.nextInt();
 			}
@@ -48,19 +68,19 @@ public class Game {
 	
 	private void start() {
 		currentPlayer = startingPlayer;
-		board.print();
+		printBoard(board, out);
 		while (!isOver()) {
 			currentPlayer = (currentPlayer + 1) % 2;
 			
 			int[] coordinates;
 			do {
 				Scanner inputScanner = new Scanner(System.in);
-				int input = readInput(inputScanner);
+				int input = readInput(inputScanner, out);
 				coordinates = parseInput(input);
-			} while (!board.isSquareEmpty(coordinates[0], coordinates[1]));
+			} while (!board.getSquare(coordinates[0], coordinates[1]).equals(Board.EMPTY));
 			
 			board.placeSign(coordinates[0], coordinates[1], players[currentPlayer].getSign());
-			board.print();
+			printBoard(board, out);
 		}
 		
 		if (board.hasWon(players[currentPlayer].getSign())) {

@@ -4,7 +4,7 @@ public class Board {
 	// constant(s)
 	private static final int BOARD_WIDTH = 3;
 	private static final int BOARD_HEIGHT = 3;
-	private static final String EMPTY = " ";
+	static final String EMPTY = " ";
 	
 	// variable declaration
 	private String[][] board;
@@ -22,10 +22,6 @@ public class Board {
 		if (this.board[row][col].equals(EMPTY)) {
 			this.board[row][col] = sign;
 		}
-	}
-	
-	boolean isSquareEmpty(int row, int col) {
-		return (this.board[row][col].equals(EMPTY));
 	}
 	
 	boolean hasWon(String sign) {
@@ -62,23 +58,17 @@ public class Board {
 			}
 		}
 		return true;
-	}	
+	}
 	
-	// maybe let this function return a string
-	void print() {
-		String boardString = "";
-		for (int row = 0; row < BOARD_HEIGHT; row++) {
-			for (int col = 0; col < BOARD_WIDTH; col++) {
-				boardString += " " + this.board[row][col] + " ";
-				if (col != BOARD_WIDTH - 1) {
-					boardString += "|";
-				}
-			}
-			boardString += "\n";
-			if (row != BOARD_HEIGHT - 1) {
-				boardString += "-----------\n";
-			}
-		}
-		System.out.printf(boardString);
+	String getSquare(int row, int col) {
+		return this.board[row][col];
+	}
+	
+	int getHeight() {
+		return board.length;
+	}
+	
+	int getWidth() {
+		return board[0].length;
 	}
 }
