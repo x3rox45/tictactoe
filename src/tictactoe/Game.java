@@ -5,47 +5,61 @@ import java.util.Scanner;
 
 public class Game {
 	// constant(s)
-	final static String SIGN_1 = "X";
-	final static String SIGN_2 = "O";
-	final static char[] validInputs = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+	private static final String SIGN_1 = "X";
+	private static final String SIGN_2 = "O";
+	private static final int NUMBER_OF_PLAYERS = 2;
 	
-	Player[] players;
-	int startingPlayer;
-	int currentPlayer;
-	Board board;
+	// variable declaration
+	private Player[] players;
+	private Board board;
+	private int startingPlayer;
+	private int currentPlayer;
 	
 	Game() {
-		this.players = new Player[2];
+		this.players = new Player[NUMBER_OF_PLAYERS];
 		this.players[0] = new Player(SIGN_1);
 		this.players[1] = new Player(SIGN_2);
 		this.startingPlayer = new Random().nextInt(players.length);
 		this.board = new Board();
 	}
 	
-	int[] readInput() {
-		int row, col, input;
+	int readInput(Scanner scanner) {
+		int input = 0;
 		do {
-			do {
-				System.out.printf("Where do you want to place your sign, player %d(%s)? ", currentPlayer + 1, players[currentPlayer].getSign());
-				Scanner scanner = new Scanner(System.in);
-				input = scanner.next().charAt(0);
-			} while (input < '1' || input > '9');
-			input -= '0';
-			row = 2 - ((input - 1) / 3);
-			col = (input - 1) % 3;
-		} while (!board.isSquareEmpty(row, col));
-		
-		int[] output = {row, col};
-		return output;
+			System.out.printf("Where do you want to place your sign, player %d(%s)? ", currentPlayer + 1, players[currentPlayer].getSign());
+			if (scanner.hasNextInt()) {
+				input = scanner.nextInt();
+			}
+			scanner.nextLine();
+		} while (input < 1 || input > 9);
+		return input;
+	}
+	
+	int[] parseInput(int input) {
+		int row = 2 - ((input - 1) / 3);
+		int col = (input - 1) % 3;
+		int[] parsedInput = {row, col};
+		return parsedInput;
+	}
+	
+	boolean isOver() {
+		return (board.isFull() || board.hasWon(players[0].getSign()) || board.hasWon(players[1].getSign()));
 	}
 	
 	private void start() {
 		currentPlayer = startingPlayer;
 		board.print();
-		while (!board.isFull() && !board.hasWon(players[0].getSign()) && !board.hasWon(players[1].getSign())) {
+		while (!isOver()) {
 			currentPlayer = (currentPlayer + 1) % 2;
-			int[] input = readInput();
-			board.placeSign(input[0], input[1], players[currentPlayer].getSign());
+			
+			int[] coordinates;
+			do {
+				Scanner inputScanner = new Scanner(System.in);
+				int input = readInput(inputScanner);
+				coordinates = parseInput(input);
+			} while (!board.isSquareEmpty(coordinates[0], coordinates[1]));
+			
+			board.placeSign(coordinates[0], coordinates[1], players[currentPlayer].getSign());
 			board.print();
 		}
 		

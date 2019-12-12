@@ -2,11 +2,11 @@ package tictactoe;
 
 public class Board {
 	// constant(s)
-	private final static int BOARD_WIDTH = 3;
-	private final static int BOARD_HEIGHT = 3;
-	private final static String EMPTY = " ";
+	private static final int BOARD_WIDTH = 3;
+	private static final int BOARD_HEIGHT = 3;
+	private static final String EMPTY = " ";
 	
-	// variable initialization
+	// variable declaration
 	private String[][] board;
 	
 	Board() {
@@ -64,14 +64,21 @@ public class Board {
 		return true;
 	}	
 	
+	// maybe let this function return a string
 	void print() {
+		String boardString = "";
 		for (int row = 0; row < BOARD_HEIGHT; row++) {
 			for (int col = 0; col < BOARD_WIDTH; col++) {
-				System.out.printf(" " + this.board[row][col] + " ");
-				if (col != BOARD_WIDTH - 1) System.out.printf("|");
+				boardString += " " + this.board[row][col] + " ";
+				if (col != BOARD_WIDTH - 1) {
+					boardString += "|";
+				}
 			}
-			System.out.printf("\n");
-			if (row != BOARD_HEIGHT - 1) System.out.printf("-----------\n");
+			boardString += "\n";
+			if (row != BOARD_HEIGHT - 1) {
+				boardString += "-----------\n";
+			}
 		}
+		System.out.printf(boardString);
 	}
 }
