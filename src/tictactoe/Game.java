@@ -43,10 +43,18 @@ public class Game {
 		out.printf(boardString);
 	}
 	
+	void setPlayerNames() {
+		for (int i = 0; i < players.length; i++) {
+			Scanner nameScanner = new Scanner(System.in);
+			out.printf("Player %d, what is your name? ", i + 1);
+			players[i].setName(nameScanner.nextLine());
+		}
+	}
+	
 	int readInput(Scanner scanner, PrintStream out) {
 		int input = 0;
 		do {
-			out.printf("Where do you want to place your sign, player %d(%s)? ", currentPlayer + 1, players[currentPlayer].getSign());
+			out.printf("Where do you want to place your sign, %s(%s)? ", players[currentPlayer].getName(), players[currentPlayer].getSign());
 			if (scanner.hasNextInt()) {
 				input = scanner.nextInt();
 			}
@@ -68,7 +76,9 @@ public class Game {
 	
 	private void start() {
 		currentPlayer = startingPlayer;
+		setPlayerNames();
 		printBoard(board, out);
+		
 		while (!isOver()) {
 			currentPlayer = (currentPlayer + 1) % 2;
 			
@@ -84,7 +94,7 @@ public class Game {
 		}
 		
 		if (board.hasWon(players[currentPlayer].getSign())) {
-			System.out.printf("Game over! Player %d(%s) won!", currentPlayer + 1, players[currentPlayer].getSign());
+			System.out.printf("Game over! %s(%s) won!", players[currentPlayer].getName(), players[currentPlayer].getSign());
 		} else {
 			System.out.printf("Game over! It is a tie!");
 		}
