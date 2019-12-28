@@ -1,4 +1,4 @@
-package tictactoe;
+package tictactoe.model;
 
 public class Player {
 	// constant(s)

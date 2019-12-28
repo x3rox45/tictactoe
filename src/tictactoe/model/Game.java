@@ -1,4 +1,4 @@
-package tictactoe;
+package tictactoe.model;
 
 import java.io.PrintStream;
 import java.util.Random;
